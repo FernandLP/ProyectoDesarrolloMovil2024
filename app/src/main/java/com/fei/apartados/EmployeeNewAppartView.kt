@@ -50,6 +50,14 @@ class EmployeeNewAppartView : AppCompatActivity() {
         linearLayout = findViewById(R.id.linearLayoutList)
         idEditText =  findViewById(R.id.editTextID)
 
+//        Esta funcion inserta datos para hacer pruebas
+//        como no hay boton para esta funcion, quitar el comentario solo una ves y compilar
+//        despues cerrar y volver a comentar la funcion
+//        primero, compilar sin comentarios
+//        segundo, cerrar aplicacion y comentar la funcion
+//        tercero, volver a compilar
+        //insertTestData()
+
         searchLastId()
 
         dateTextView.text = actual
@@ -71,40 +79,86 @@ class EmployeeNewAppartView : AppCompatActivity() {
 
     }
 
-    @SuppressLint("Range", "ResourceType")
     private fun searchLastId() {
         val dbHelper = DatabaseHelper(this)
         val db = dbHelper.readableDatabase
 
-        // Verificar si la tabla Articulo existe en la base de datos
-        val cursor = db.rawQuery("SELECT * FROM sqlite_master WHERE type='table' AND name='Articulo'", null)
-        if (cursor.count == 0) {
-            // La tabla Articulo no existe, no hacer nada
-            cursor.close()
-            db.close()
-            dbHelper.close()
-            Toast.makeText(this, "No existe la base de datos", Toast.LENGTH_SHORT).show()
-            idEditText.setText("null")
-            return
-        }
-        cursor.close()
+        val query = "SELECT MAX(id) FROM Apartado"
+        val cursor = db.rawQuery(query, null)
 
-        // La tabla Articulo existe, realizar la consulta para obtener el último ID
-        val query = "SELECT MAX(id_apartado) AS lastId FROM Articulo"
-        val idCursor = db.rawQuery(query, null)
-        if (idCursor.moveToFirst()) {
-            val lastId = idCursor.getInt(idCursor.getColumnIndex("lastId"))
-            // Imprimir el último ID
-            Toast.makeText(this, "La base de datos existe y el ultimo valor es $lastId", Toast.LENGTH_SHORT).show()
-            Log.d("Last ID", "El último ID de la tabla Articulo es: $lastId")
-            val num = lastId + 1
+        if (cursor != null && cursor.moveToFirst()) {
+            val lastId = cursor.getInt(0)
+            var num = lastId.toInt() + 1;
             idEditText.setText(num.toString())
+//            Log.d("LastApartadoId", "Last Apartado ID: $lastId")
         }
-        idCursor.close()
+
+        cursor?.close()
+        db.close()
+    }
+
+
+//    @SuppressLint("Range", "ResourceType")
+//    private fun searchLastId() {
+//        val dbHelper = DatabaseHelper(this)
+//        val db = dbHelper.readableDatabase
+//
+//        // Verificar si la tabla Articulo existe en la base de datos
+//        val cursor = db.rawQuery("SELECT * FROM sqlite_master WHERE type='table' AND name='Articulo'", null)
+//        if (cursor.count == 0) {
+//            // La tabla Articulo no existe, no hacer nada
+//            cursor.close()
+//            db.close()
+//            dbHelper.close()
+//
+//
+//            return
+//        }
+//        cursor.close()
+//
+//        // La tabla Articulo existe, realizar la consulta para obtener el último ID
+//        val query = "SELECT MAX(id_apartado) AS lastId FROM Articulo"
+//        val idCursor = db.rawQuery(query, null)
+//        if (idCursor.moveToFirst()) {
+//            val lastId = idCursor.getInt(idCursor.getColumnIndex("lastId"))
+//            // Imprimir el último ID
+//            Toast.makeText(this, "La base de datos existe y el ultimo valor es $lastId", Toast.LENGTH_SHORT).show()
+//
+//
+//        }
+//        idCursor.close()
+//        db.close()
+//        dbHelper.close()
+//    }
+
+    private fun insertTestData() {
+        val dbHelper = DatabaseHelper(this)
+        val db = dbHelper.writableDatabase
+
+        // Insertar datos en la tabla Cliente
+        db.execSQL("INSERT INTO Cliente (nombre, telefono) VALUES ('Eduardo', '2288123456')")
+        db.execSQL("INSERT INTO Cliente (nombre, telefono, informacion_adicional) VALUES ('Miguel', '2281345678', 'avity@game.com')")
+        db.execSQL("INSERT INTO Cliente (nombre, telefono) VALUES ('Daniel', '8884987654')")
+
+        // Insertar datos en la tabla Apartado
+        db.execSQL("INSERT INTO Apartado (fecha_creacion, cantidad_articulos, estado, fecha_tolerancia, restante, id_cliente) VALUES ('08/05/2024', 2, 'Activo', '08/05/2024', 0.0, 1)")
+        db.execSQL("INSERT INTO Apartado (fecha_creacion, cantidad_articulos, estado, fecha_tolerancia, restante, id_cliente) VALUES ('08/05/2024', 2, 'Activo', '08/05/2024', 0.0, 2)")
+
+        // Insertar datos en la tabla Articulo
+        db.execSQL("INSERT INTO Articulo (id_apartado, descripcion, cantidad, precio_unitario) VALUES (1, 'Playera', 1, 80.0)")
+        db.execSQL("INSERT INTO Articulo (id_apartado, descripcion, cantidad, precio_unitario) VALUES (1, 'Pantalon', 1, 120.0)")
+        db.execSQL("INSERT INTO Articulo (id_apartado, descripcion, cantidad, precio_unitario) VALUES (1, 'Camisa', 1, 170.0)")
+        db.execSQL("INSERT INTO Articulo (id_apartado, descripcion, cantidad, precio_unitario) VALUES (1, 'Pans', 1, 130.0)")
+        db.execSQL("INSERT INTO Articulo (id_apartado, descripcion, cantidad, precio_unitario) VALUES (2, 'Chamarra', 1, 320.0)")
+        db.execSQL("INSERT INTO Articulo (id_apartado, descripcion, cantidad, precio_unitario) VALUES (2, 'Playera', 1, 120.0)")
+
+        // Insertar datos en la tabla Abonos
+        db.execSQL("INSERT INTO Abonos (id_apartado, cantidad, fecha) VALUES (1, 50.0, '08/05/2024')")
+        db.execSQL("INSERT INTO Abonos (id_apartado, cantidad, fecha) VALUES (2, 290.0, '08/05/2024')")
+
         db.close()
         dbHelper.close()
     }
-
 
 
     private fun addItem() {
