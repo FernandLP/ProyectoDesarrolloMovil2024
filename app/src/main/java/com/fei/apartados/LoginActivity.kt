@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun login() {
         //Implementar logica para el login recuperando informacion de una base de datos
-        val intent = Intent(this, EmployeeAppartView::class.java)
+        val intent = Intent(this, EmployeeMainListActivity::class.java)
         startActivity(intent)
     }
 }

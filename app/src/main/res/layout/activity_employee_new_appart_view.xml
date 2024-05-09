@@ -74,10 +74,10 @@
                         android:gravity="center">
 
                         <EditText
-                            android:id="@+id/textViewID"
+                            android:id="@+id/editTextID"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="404"
+                            android:text="ID"
                             android:editable="false"
                             android:textColor="@android:color/black"
                             android:textSize="24sp" />
