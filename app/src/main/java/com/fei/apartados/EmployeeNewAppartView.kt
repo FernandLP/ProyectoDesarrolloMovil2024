@@ -1,9 +1,6 @@
 package com.fei.apartados
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -16,7 +13,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -30,6 +26,7 @@ class EmployeeNewAppartView : AppCompatActivity() {
     private lateinit var clientEditText: EditText
     private lateinit var phoneEditText: EditText
     private lateinit var infoEditText: EditText
+    private lateinit var firstAbEditText: EditText
 
     private lateinit var idEditText: EditText
     private lateinit var dateTextView: TextView
@@ -49,6 +46,7 @@ class EmployeeNewAppartView : AppCompatActivity() {
         dateTextView = findViewById(R.id.textViewDate)
         linearLayout = findViewById(R.id.linearLayoutList)
         idEditText =  findViewById(R.id.editTextID)
+        firstAbEditText =  findViewById(R.id.editTextFirstAb)
 
 //        Esta funcion inserta datos para hacer pruebas
 //        como no hay boton para esta funcion, quitar el comentario solo una ves y compilar
@@ -74,7 +72,7 @@ class EmployeeNewAppartView : AppCompatActivity() {
 
 
         backButton.setOnClickListener {
-            backAllert()
+            backAlert()
         }
 
     }
@@ -90,46 +88,16 @@ class EmployeeNewAppartView : AppCompatActivity() {
             val lastId = cursor.getInt(0)
             var num = lastId.toInt() + 1;
             idEditText.setText(num.toString())
-//            Log.d("LastApartadoId", "Last Apartado ID: $lastId")
         }
 
         cursor?.close()
         db.close()
     }
 
-
-//    @SuppressLint("Range", "ResourceType")
-//    private fun searchLastId() {
-//        val dbHelper = DatabaseHelper(this)
-//        val db = dbHelper.readableDatabase
-//
-//        // Verificar si la tabla Articulo existe en la base de datos
-//        val cursor = db.rawQuery("SELECT * FROM sqlite_master WHERE type='table' AND name='Articulo'", null)
-//        if (cursor.count == 0) {
-//            // La tabla Articulo no existe, no hacer nada
-//            cursor.close()
-//            db.close()
-//            dbHelper.close()
-//
-//
-//            return
-//        }
-//        cursor.close()
-//
-//        // La tabla Articulo existe, realizar la consulta para obtener el último ID
-//        val query = "SELECT MAX(id_apartado) AS lastId FROM Articulo"
-//        val idCursor = db.rawQuery(query, null)
-//        if (idCursor.moveToFirst()) {
-//            val lastId = idCursor.getInt(idCursor.getColumnIndex("lastId"))
-//            // Imprimir el último ID
-//            Toast.makeText(this, "La base de datos existe y el ultimo valor es $lastId", Toast.LENGTH_SHORT).show()
-//
-//
-//        }
-//        idCursor.close()
-//        db.close()
-//        dbHelper.close()
-//    }
+    override fun onBackPressed() {
+        // Llamar a tu función backAlert() aquí
+        backAlert()
+    }
 
     private fun insertTestData() {
         val dbHelper = DatabaseHelper(this)
@@ -223,9 +191,10 @@ class EmployeeNewAppartView : AppCompatActivity() {
 
         // Aquí puedes hacer lo que necesites con las listas de datos
         // Por ejemplo, guardar en una base de datos o realizar alguna acción.
+
     }
 
-    private fun backAllert() {
+    private fun backAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Confirmación")
         builder.setMessage("¿Estás seguro de que quieres salir?")
