@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlin.random.Random
@@ -32,6 +33,16 @@ class EmployeeMainListActivity : AppCompatActivity() {
             val intent = Intent(this, EmployeeNewAppartView::class.java)
             startActivity(intent)
         }
+//--------------------------------------------------------------------------------------------------
+        lv_apparts.setOnItemClickListener { parent, view, position, id ->
+            val clickedItem = parent.getItemAtPosition(position) as WidgetListAppart
+//            val clickedItemId = clickedItem.id
+            val clickedItemId = 2
+            val intent = Intent(this, EmployeeAppartView::class.java)
+            intent.putExtra("id", clickedItemId)
+            startActivity(intent)
+        }
+//--------------------------------------------------------------------------------------------------
     }
 
     private fun loadData() {
