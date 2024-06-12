@@ -4,7 +4,7 @@
         android:title="Abono/Pago" />
     <item
         android:id="@+id/opc2"
-        android:title="Editar" />
+        android:title="Editar articulos" />
     <item
         android:id="@+id/opc3"
         android:title="Eliminar" />

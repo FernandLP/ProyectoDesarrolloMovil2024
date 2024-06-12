@@ -1,6 +1,7 @@
 package com.fei.apartados
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,7 @@ import kotlin.properties.Delegates
 class EmployeeNewAppartView : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     private lateinit var addButton: Button
+    private lateinit var removeButton: Button
     private lateinit var saveButton: Button
     private lateinit var backButton: ImageView
 
@@ -35,6 +37,8 @@ class EmployeeNewAppartView : AppCompatActivity() {
     private lateinit var dateTextView: TextView
     private lateinit var linearLayout: LinearLayout
 
+    private lateinit var totalTextView: TextView
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +49,7 @@ class EmployeeNewAppartView : AppCompatActivity() {
         val actual = dateFormat.format(calendar.time)
 
         addButton = findViewById(R.id.btnAdd)
+        removeButton = findViewById(R.id.btnRemove)
         saveButton = findViewById(R.id.btnSave)
         backButton = findViewById(R.id.imageViewBack)
 
@@ -56,21 +61,24 @@ class EmployeeNewAppartView : AppCompatActivity() {
         infoEditText = findViewById(R.id.editTextInfo)
         firstAbEditText =  findViewById(R.id.editTextFirstAb)
 
-//        Esta funcion inserta datos para hacer pruebas
-//        como no hay boton para esta funcion, quitar el comentario solo una ves y compilar
-//        despues cerrar y volver a comentar la funcion
-//        primero, compilar sin comentarios
-//        segundo, cerrar aplicacion y comentar la funcion
-//        tercero, volver a compilar
+        totalTextView = findViewById(R.id.totalTotal)
+
 //        insertTestData()
 
         idEditText.setText((searchLastId("Apartado")+1).toString())
 
         dateTextView.text = actual
 
+        addItem()
 
         addButton.setOnClickListener {
             addItem()
+        }
+
+        removeButton.setOnClickListener {
+            if (linearLayout.childCount > 0) {
+                linearLayout.removeViewAt(linearLayout.childCount - 1)
+            }
         }
 
 
@@ -142,35 +150,33 @@ class EmployeeNewAppartView : AppCompatActivity() {
 
 
     private fun addItem() {
-        val customWidget = LayoutInflater.from(this).inflate(R.layout.widget_new_appart_item, null) // Crear instancia del widget personalizado
-        linearLayout.addView(customWidget) // Agregar el widget personalizado al LinearLayout
-        // Recorrer todos los elementos en el LinearLayout
-        for (i in 0 until linearLayout.childCount) {
-            val widgetPersonalizado = linearLayout.getChildAt(i)
-            if (widgetPersonalizado is RelativeLayout) {
-                val editTextCantidad = widgetPersonalizado.findViewById<EditText>(R.id.cant)
-                val editTextPrecio = widgetPersonalizado.findViewById<EditText>(R.id.price)
-                val textViewTotal = widgetPersonalizado.findViewById<TextView>(R.id.total)
+        val customWidget = LayoutInflater.from(this).inflate(R.layout.widget_new_appart_item, null)
+        linearLayout.addView(customWidget)
 
-                // Agregar listeners a los EditText de cantidad y precio
-                editTextCantidad.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                    override fun afterTextChanged(s: Editable?) {
-                        calcularTotal(editTextCantidad, editTextPrecio, textViewTotal)
-                    }
-                })
+        val editTextCantidad = customWidget.findViewById<EditText>(R.id.cant)
+        val editTextPrecio = customWidget.findViewById<EditText>(R.id.price)
+        val textViewTotal = customWidget.findViewById<TextView>(R.id.total)
 
-                editTextPrecio.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                    override fun afterTextChanged(s: Editable?) {
-                        calcularTotal(editTextCantidad, editTextPrecio, textViewTotal)
-                    }
-                })
+        // Agregar TextWatchers
+        editTextCantidad.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                calcularTotal(editTextCantidad, editTextPrecio, textViewTotal)
             }
-        }
+        })
+
+        editTextPrecio.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                calcularTotal(editTextCantidad, editTextPrecio, textViewTotal)
+            }
+        })
+
+        calcularTotal(editTextCantidad, editTextPrecio, textViewTotal)
     }
+
 
     private fun saveData() {
         // Obtener una referencia a la base de datos en modo escritura
@@ -268,6 +274,8 @@ class EmployeeNewAppartView : AppCompatActivity() {
         // Verificar si todas las inserciones fueron exitosas y mostrar mensajes apropiados
         if (allTablesInsertedSuccessfully) {
             Toast.makeText(this, "Todas las tablas se guardaron exitosamente", Toast.LENGTH_SHORT).show()
+            setResult(Activity.RESULT_OK)
+            finish()
         } else {
             Toast.makeText(this, "Hubo errores al guardar las tablas", Toast.LENGTH_SHORT).show()
         }
@@ -296,7 +304,23 @@ class EmployeeNewAppartView : AppCompatActivity() {
         val precio = editTextPrecio.text.toString().toDoubleOrNull() ?: 0.0
         val total = cantidad * precio
         textViewTotal.text = total.toString()
+
+        actualizarTotalAcumulado()
     }
+
+    private fun actualizarTotalAcumulado() {
+        var totalAcumulado = 0.0
+        for (i in 0 until linearLayout.childCount) {
+            val widgetPersonalizado = linearLayout.getChildAt(i)
+            if (widgetPersonalizado is RelativeLayout) {
+                val textViewTotal = widgetPersonalizado.findViewById<TextView>(R.id.total)
+                val total = textViewTotal.text.toString().toDoubleOrNull() ?: 0.0
+                totalAcumulado += total
+            }
+        }
+        totalTextView.text = totalAcumulado.toString()
+    }
+
 
 
 }

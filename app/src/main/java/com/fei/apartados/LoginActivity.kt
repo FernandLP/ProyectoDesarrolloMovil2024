@@ -34,8 +34,8 @@ class LoginActivity : AppCompatActivity() {
         val user = editTextUser.text.toString()
         val password = editTextPassword.text.toString()
 
-        if (user == "Eduardo") {
-            if (password == "1234") {
+        if (user == "") {
+            if (password == "") {
                 val intent = Intent(this, EmployeeMainListActivity::class.java)
                 intent.putExtra("user", user)
 

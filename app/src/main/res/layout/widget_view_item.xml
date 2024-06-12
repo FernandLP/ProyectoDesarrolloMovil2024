@@ -12,14 +12,12 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content">
 
-            <EditText
+            <TextView
                 android:id="@+id/cant"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="numberDecimal"
-                android:textAlignment="textEnd"
-                android:hint="Cant."/>
+                android:text="Cantidad"
+                android:textSize="16sp" />
 
         </RelativeLayout>
 
@@ -29,12 +27,12 @@
             android:layout_weight="1"
             >
 
-            <EditText
+            <TextView
                 android:id="@+id/desc"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:hint="Desc."/>
+                android:text="Descripción"
+                android:textSize="16sp" />
 
         </RelativeLayout>
 
@@ -42,12 +40,12 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content">
 
-            <EditText
+            <TextView
                 android:id="@+id/price"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:hint="Precio"/>
+                android:text="Precio"
+                android:textSize="16sp" />
 
         </RelativeLayout>
 
@@ -57,10 +55,10 @@
 
             <TextView
                 android:id="@+id/total"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:hint="Total"/>
+                android:text="Total"
+                android:textSize="16sp" />
 
         </RelativeLayout>
 

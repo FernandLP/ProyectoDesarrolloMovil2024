@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <item android:id="@+id/opc1"
-        android:title="Numero"/>
+        android:title="Número"/>
 
     <item android:id="@+id/opc2"
         android:title="Nombre"/>

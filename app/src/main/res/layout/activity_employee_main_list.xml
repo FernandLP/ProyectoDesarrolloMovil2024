@@ -63,7 +63,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="30dp"
                 android:gravity="center"
-                android:onClick="pupopMenuFilter"
+                android:onClick="popupMenuFilter"
                 android:text="Ordenar por..."
                 android:textColor="#000000"
                 android:textSize="16dp"
@@ -83,16 +83,6 @@
                 android:dividerHeight="0dp">
 
             </ListView>
-
-<!--            <Button-->
-<!--                android:id="@+id/button7"-->
-<!--                android:layout_width="80dp"-->
-<!--                android:layout_height="80dp"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_marginBottom="20dp"-->
-<!--                android:layout_marginRight="20dp"-->
-<!--                android:text="" />-->
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/floatingActionButton"
