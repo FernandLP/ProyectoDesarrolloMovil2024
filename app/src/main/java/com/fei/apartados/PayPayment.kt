@@ -53,27 +53,32 @@ class PayPayment : AppCompatActivity() {
         val monto = montoTextView.text.toString().toFloatOrNull()
 
         if (monto != null && monto > 0 && monto <= restante) {
-            // Actualizar el restante
-            restante -= monto
-            restanteTextView.text = restante.toString()
+            // Calcular el nuevo restante
+            val nuevoRestante = restante - monto
+            restanteTextView.text = nuevoRestante.toString()
 
             val dbHelper = DatabaseHelper(this)
             val db = dbHelper.writableDatabase
 
-            // Crear un nuevo registro en la base de datos en la tabla Abonos
-            val contentValues = ContentValues()
-            contentValues.put("id_apartado", id)
-            contentValues.put("cantidad", monto)
-
-            // Obtener la fecha actual en el formato "dd/MM/yyyy"
-            val currentDate = SimpleDateFormat("dd/MM/yyyy").format(Date())
-            contentValues.put("fecha", currentDate)
+            // Crear un nuevo registro en la tabla Abonos
+            val contentValues = ContentValues().apply {
+                put("id_apartado", id)
+                put("cantidad", monto)
+                // Obtener la fecha actual en el formato "dd/MM/yyyy"
+                val currentDate = SimpleDateFormat("dd/MM/yyyy").format(Date())
+                put("fecha", currentDate)
+            }
 
             db.insert("Abonos", null, contentValues)
 
             // Actualizar el campo restante de la tabla Apartado
-            val updateValues = ContentValues()
-            updateValues.put("restante", restante)
+            val updateValues = ContentValues().apply {
+                put("restante", nuevoRestante)
+                // Si nuevoRestante es 0, actualizar el estado a "s"
+                if (nuevoRestante == 0.0f) {
+                    put("estado", "s")
+                }
+            }
 
             val whereClause = "id = ?"
             val whereArgs = arrayOf(id.toString())
@@ -91,6 +96,7 @@ class PayPayment : AppCompatActivity() {
             montoTextView.error = "Monto inválido, debe ser mayor a 0 y menor o igual al restante"
         }
     }
+
 
 
 }

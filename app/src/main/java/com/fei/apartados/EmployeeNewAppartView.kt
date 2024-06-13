@@ -3,6 +3,7 @@ package com.fei.apartados
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -36,10 +37,11 @@ class EmployeeNewAppartView : AppCompatActivity() {
     private lateinit var idEditText: EditText
     private lateinit var dateTextView: TextView
     private lateinit var linearLayout: LinearLayout
+    private lateinit var loadContact: ImageView
 
     private lateinit var totalTextView: TextView
-
-
+    private var loadClientBoolean: Boolean = false
+    private var selectedClientId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +62,7 @@ class EmployeeNewAppartView : AppCompatActivity() {
         phoneEditText = findViewById(R.id.editTextPhone)
         infoEditText = findViewById(R.id.editTextInfo)
         firstAbEditText =  findViewById(R.id.editTextFirstAb)
+        loadContact = findViewById(R.id.imageViewLoadContact)
 
         totalTextView = findViewById(R.id.totalTotal)
 
@@ -91,6 +94,15 @@ class EmployeeNewAppartView : AppCompatActivity() {
             backAlert()
         }
 
+        loadContact.setOnClickListener {
+            loadClient()
+        }
+
+    }
+
+    private fun loadClient() {
+        val intent = Intent(this, LoadClient::class.java)
+        startActivityForResult(intent, REQUEST_CODE_SELECT_CLIENT)
     }
 
     private fun searchLastId(tableName: String): Int {
@@ -212,18 +224,25 @@ class EmployeeNewAppartView : AppCompatActivity() {
             }
         }
 
-        val client = clientEditText.text.toString()
-        val phone = phoneEditText.text.toString()
-        val info = infoEditText.text.toString()
-        val valuesClient = ContentValues().apply {
-            put("nombre", client)
-            put("telefono", phone)
-            put("informacion_adicional", info)
-        }
-        // Guardar cliente
-        val clientId = db.insert("Cliente", null, valuesClient)
-        if (clientId == -1L) {
-            allTablesInsertedSuccessfully = false
+        val clientId: Long
+        if (loadClientBoolean) {
+            // Usar el ID del cliente recuperado
+            clientId = selectedClientId.toLong()
+        } else {
+            // Crear un nuevo cliente
+            val client = clientEditText.text.toString()
+            val phone = phoneEditText.text.toString()
+            val info = infoEditText.text.toString()
+            val valuesClient = ContentValues().apply {
+                put("nombre", client)
+                put("telefono", phone)
+                put("informacion_adicional", info)
+            }
+            // Guardar cliente
+            clientId = db.insert("Cliente", null, valuesClient)
+            if (clientId == -1L) {
+                allTablesInsertedSuccessfully = false
+            }
         }
 
         val creationDate = dateTextView.text.toString()
@@ -282,6 +301,7 @@ class EmployeeNewAppartView : AppCompatActivity() {
     }
 
 
+
     private fun backAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Confirmación")
@@ -319,6 +339,48 @@ class EmployeeNewAppartView : AppCompatActivity() {
             }
         }
         totalTextView.text = totalAcumulado.toString()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_SELECT_CLIENT && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                selectedClientId = it.getIntExtra("selectedClientId", -1)
+                //imprimir lo que contenga selectedClientId
+                loadClientBoolean = true
+                Toast.makeText(this, "Cliente seleccionado: $selectedClientId", Toast.LENGTH_SHORT).show()
+                // Aquí puedes actualizar la UI con la información del cliente seleccionado
+                cargarCliente()
+            }
+        }
+    }
+
+    @SuppressLint("Range")
+    private fun cargarCliente() {
+        val dbHelper = DatabaseHelper(this)
+        val db: SQLiteDatabase = dbHelper.readableDatabase
+        val query = "SELECT * FROM Cliente WHERE id = ?"
+        val cursor = db.rawQuery(query, arrayOf(selectedClientId.toString()))
+        if (cursor.moveToFirst()) {
+            val clientName = cursor.getString(cursor.getColumnIndex("nombre"))
+            val clientPhone = cursor.getString(cursor.getColumnIndex("telefono"))
+            val clientInfo = cursor.getString(cursor.getColumnIndex("informacion_adicional"))
+
+            clientEditText.setText(clientName)
+            phoneEditText.setText(clientPhone)
+            infoEditText.setText(clientInfo)
+
+            clientEditText.isEnabled = false
+            phoneEditText.isEnabled = false
+            infoEditText.isEnabled = false
+        }
+        cursor.close()
+        db.close()
+    }
+
+    companion object {
+        const val REQUEST_CODE_SELECT_CLIENT = 2
     }
 
 

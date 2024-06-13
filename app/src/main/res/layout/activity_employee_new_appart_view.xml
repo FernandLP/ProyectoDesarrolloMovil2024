@@ -131,13 +131,13 @@
                     android:gravity="center_vertical"
                     android:layoutDirection="rtl">
 
-<!--                    <ImageView-->
-<!--                        android:id="@+id/imageViewLoadContact"-->
-<!--                        android:layout_width="20dp"-->
-<!--                        android:layout_height="20dp"-->
-<!--                        android:layout_marginLeft="15dp"-->
-<!--                        android:src="@drawable/address_book_solid"-->
-<!--                        app:tint="#8C8C8C" />-->
+                    <ImageView
+                        android:id="@+id/imageViewLoadContact"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="15dp"
+                        android:src="@drawable/address_book_solid"
+                        app:tint="#8C8C8C" />
 
                     <EditText
                         android:id="@+id/editTextClient"

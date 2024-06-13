@@ -1,0 +1,9 @@
+<!-- res/menu/drawer_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_list_apartados"
+        android:title="Lista de apartados" />
+    <item
+        android:id="@+id/nav_list_clientes"
+        android:title="Clientes" />
+</menu>
