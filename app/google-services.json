@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "517548939462",
+    "project_id": "practica04-ba075",
+    "storage_bucket": "practica04-ba075.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517548939462:android:3c7d6b72c35faaa49d1fc7",
+        "android_client_info": {
+          "package_name": "com.fei.apartados"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXukT1BF9mKPoH7qPnpIUmRJ-HabwGNfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

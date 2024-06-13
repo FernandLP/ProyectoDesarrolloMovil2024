@@ -72,7 +72,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="APARTADOS"
+                android:text="APARTADOS45"
                 android:textAlignment="center"
                 android:textSize="36dp"
                 android:textStyle="bold" />
@@ -112,6 +112,14 @@
                         android:hint="Contraseña"
                         />
 
+                    <EditText
+                        android:id="@+id/editTextConfirmPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:hint="Confirmar contraseña"
+                        android:inputType="textPassword" />
+
                     <TextView
                         android:id="@+id/textViewMessage"
                         android:layout_width="match_parent"
@@ -124,9 +132,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:text="Inicia sesión"
                         android:backgroundTint="@color/blue1"
-                        />
+                        android:text="Registrar" />
 
                 </LinearLayout>
 
